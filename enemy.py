@@ -73,3 +73,35 @@ class Enemy:
             self.pos.y -=3
         elif self.direction == S:
             self.pos.y +=3
+
+
+class Frog(Enemy):
+    def __init__(self):
+        Enemy.__init__(self)
+
+    def die(self, ballx, bally, cleavex, cleavey):
+        Enemy.die(self, ballx, bally, cleavex, cleavey)
+
+
+    def move(self, map, ticker, px, py):
+        Enemy.move(self, map, ticker, px, py)
+
+    def draw(self, screen): #for now
+        if self.isAlive == True:
+            pygame.draw.rect(screen, (20, 20, 40), ( self.pos.x, self.pos.y, 20, 20))
+
+
+class Normcurse(Enemy):
+    def __init__(self):
+        Enemy.__init__(self)
+
+    def die(self, ballx, bally, cleavex, cleavey):
+        Enemy.die(self, ballx, bally, cleavex, cleavey)
+
+
+    def move(self, map, ticker, px, py):
+        Enemy.move(self, map, ticker, px, py)
+
+    def draw(self, screen): #for now
+        if self.isAlive == True:
+            pygame.draw.rect(screen, (20, 20, 40), ( self.pos.x, self.pos.y, 20, 20))

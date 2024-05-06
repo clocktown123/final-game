@@ -1,0 +1,382 @@
+import pygame as pg
+import sys
+import pygame.font
+pygame.init()
+import pygame
+from map import MapF
+from hp import Health
+from player import Gojo
+from player import Sukuna
+from limitless import fireball
+from cleave import Cleave
+from enemy import Enemy 
+from rct import RCT
+from pygame import mixer
+
+mxpos = 0
+mypos = 0
+mousePos = (mxpos, mypos)
+mixer.init()
+pygame.init()
+pygame.display.set_caption("top down grid map game")
+screen = pygame.display.set_mode((1000,1000))
+clock = pygame.time.Clock()
+
+music = pygame.mixer.Sound("BGGB_music.mp3")
+p1 = Gojo()
+p2 = Sukuna()
+ball = fireball()
+cleave = Cleave()
+e1 = Enemy()
+e2 = Enemy()
+
+def draw_text(text, font, text_col, tx, ty):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (tx, ty))
+
+class States(object):
+    def __init__(self):
+        self.done = False
+        self.next = None
+        self.quit = False
+        self.previous = None
+        self.keys2 = [False, False, False, False, False, False, False]
+        self.UP = 2
+        self.LEFT = 0
+        self.RIGHT = 1
+        self.state = 1 #1 is menu, 2 is playing, 3 is credits
+        self.button1 = False
+        self.button2 = False
+        self.button3 = False
+        self.counter = 0
+        self.mxpos = 0
+        self.mypos = 0
+        self.mousePos = (mxpos, mypos)
+        self.mouseDown = False
+        self.ticker = 0
+        self.mapNum = 1
+        self.A = 0
+        self.D = 1
+        self.W = 2
+        self.S = 3
+        self.SPACE = 4
+        self.F = 5
+        self.R = 6
+        self.text_font = pygame.font.SysFont("Sans", 30, bold = True)
+            
+    def get_event(self, event):
+        
+      
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                self.keys2[self.SPACE] = True
+                self.counter += 1
+            if event.key == pygame.K_f:
+                self.keys2[self.F] = True
+            if event.key == pygame.K_r:
+                self.keys2[self.R] = True
+            
+            if event.key == pygame.K_a:
+                self.keys2[self.A] = True
+                #RowNum = 0
+            if event.key == pygame.K_d:
+                self.keys2[self.D] = True
+                #RowNum = 3
+            if event.key == pygame.K_w:
+                self.keys2[self.W] = True
+                #RowNum = 1
+            if event.key == pygame.K_s:
+               self. keys2[self.S] = True
+                #RowNum = 2
+        
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                self.keys2[self.SPACE] = False
+            if event.key == pygame.K_f:
+                self.keys2[self.F] = False
+            if event.key == pygame.K_r:
+                self.keys2[self.R] = False
+
+
+            if event.key == pygame.K_a:
+                self.keys2[self.A] = False
+                #RowNum = 0
+            if event.key == pygame.K_d:
+                self.keys2[self.D] = False
+                #RowNum = 3
+            if event.key == pygame.K_w:
+                self.keys2[self.W] = False
+                #RowNum = 1
+            if event.key == pygame.K_s:
+                self.keys2[self.S] = False
+                #RowNum = 2
+            
+        if event.type == pygame.MOUSEMOTION:
+            self.mousePos = event.pos
+        #keeps track of mouse button
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.mouseDown = True
+        if event.type == pygame.MOUSEBUTTONUP:
+            self.mouseDown = False
+        
+        #keyboard input (more needed for actual game)
+        if event.type == pygame.KEYDOWN: 
+            if event.key == pygame.K_q:
+                self.quitGame = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_q:
+                self.quitGame = False
+
+
+#--------------------------------------------------------------------------------
+class End(States):
+    def __init__(self):
+        States.__init__(self)
+        self.next = 'LevelOne'
+       
+    def cleanup(self):
+        print('cleaning up End state stuff')
+       
+    
+
+    
+
+
+class titleScreen(States):
+    def __init__(self):
+        States.__init__(self)
+        self.next = 'LevelOne'
+
+    def startup (self):
+        print('Title Screen')
+        if self.state == 1:
+            screen.fill((230,100,100))# Clear the screen pink
+
+        if self.button1 == False:
+            pygame.draw.rect(screen, (100, 230, 100), (100, 400, 200, 150))
+        else:
+            pygame.draw.rect(screen, (200, 250, 200), (100, 400, 200, 150))
+        if self.button2 == False:
+            pygame.draw.rect(screen, (100, 230, 100), (400, 400, 200, 150))
+        else:
+            pygame.draw.rect(screen, (100, 250, 100), (400, 400, 200, 150))
+        if self.button3 == False:
+            pygame.draw.rect(screen, (100, 230, 100), (700, 400, 200, 150))
+        else:
+            pygame.draw.rect(screen, (100, 250, 100), (700, 400, 200, 150))
+
+        draw_text("The Honored", self.text_font, (0,0,0), 110, 440)
+        draw_text("One", self.text_font, (0,0,0), 170, 500)
+    
+        draw_text("The Fallen", self.text_font, (0,0,0), 430, 440)
+        draw_text("One", self.text_font, (0,0,0), 470, 500)
+    
+        
+
+
+    def update(self):
+        if self.state == 1 and mousePos[0]>100 and mousePos[0]<300 and mousePos[1]>400 and mousePos[1]<550:
+            button1 = True
+        else:
+            button1 = False
+
+        if self.state == 1 and mousePos[0]>400 and mousePos[0]<600 and mousePos[1]>400 and mousePos[1]<550:
+            button2 = True
+        else:
+            button2 = False
+
+        if self.state == 1 and mousePos[0]>700 and mousePos[0]<900 and mousePos[1]>400 and mousePos[1]<550:
+            button3 = True
+        else:
+            button3 = False
+    
+        if self.state == 1 and button1 == True and self.mouseDown == True:
+            self.state = 2
+        if self.state == 1 and button2 == True and self.mouseDown == True:
+            self.state = 3
+        if self.state == 1 and button3 == True and self.mouseDown == True:
+            self.state = 4
+
+
+
+class LevelOne(States):
+    def __init__(self):
+        States.__init__(self)
+        
+       
+       
+    def kill(self):
+        if e1.isAlive == False:
+            self.next = 'LevelTwo'
+    
+       
+    def startup(self):
+        print('Level 1!')
+        self.map = [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+                    [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,2,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0,2],
+                    [2,0,2,0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,2],
+                    [2,0,2,0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,2]]
+        
+            
+   
+
+    def MapF (screen, map):
+        brick = pygame.image.load('brick.png')
+        dirt = pygame.image.load('dirt.png')
+        lava = pygame.image.load('lava.png')
+        for i in range(20):
+            for j in range(20):
+                if map[i][j] == 1:
+                    screen.blit(dirt, (j*50, i * 50), (0, 0, 50, 50))
+                if map[i][j] == 2:
+                    screen.blit(brick, (j *50, i * 50), (0, 0, 50, 50))
+                if map[i][j] == 3:
+                    screen.blit(lava, (j *50, i * 50), (0, 0, 50, 50))
+
+
+class LevelTwo(States):
+    def __init__(self):
+        States.__init__(self)
+        
+
+
+
+    def kill(self):
+        if e1.isAlive == False:
+            self.next = 'LevelOne'
+
+  
+    
+    def startup(self):
+        print('Level 2!')
+        self.map2 = [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+                    [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,2],
+                    [2,0,2,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,2],
+                    [2,0,2,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,2],
+                    [2,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,2,0,0,0,0,2,2,2,0,0,0,0,0,2],
+                    [2,0,0,0,0,2,2,0,0,0,0,2,2,2,0,0,0,0,0,2],
+                    [2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                    [2,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,2]]
+    def MapF (screen, map):
+        brick = pygame.image.load('brick.png')
+        dirt = pygame.image.load('dirt.png')
+        lava = pygame.image.load('lava.png')
+        for i in range(20):
+            for j in range(20):
+                if map[i][j] == 1:
+                    screen.blit(dirt, (j*50, i * 50), (0, 0, 50, 50))
+                if map[i][j] == 2:
+                    screen.blit(brick, (j *50, i * 50), (0, 0, 50, 50))
+                if map[i][j] == 3:
+                    screen.blit(lava, (j *50, i * 50), (0, 0, 50, 50))
+
+
+class Control:
+    def __init__(self, **settings): # ** denotes a KWARG, which lets you have an unknown num of parameters
+        self.__dict__.update(settings) #double underscore helps to avoid naming conflicts in subclasses
+        self.done = False
+        self.screen = pg.display.set_mode(self.size)
+        self.clock = pg.time.Clock()
+    
+    
+    def setup_states(self, state_dict, start_state):
+        self.state_dict = state_dict
+        self.state_name = start_state
+        self.state = self.state_dict[self.state_name] #state has been set to an OBJECT
+    
+    
+    def flip_state(self):
+        self.state.done = False #we are referencing the variable of whatever OBJECT is in "state"
+        previous,self.state_name = self.state_name, self.state.next
+        self.state.cleanup()
+        self.state = self.state_dict[self.state_name]
+        self.state.startup()
+        self.state.previous = previous
+    
+    def update(self, dt):
+        if self.state.quit:
+            self.done = True
+        elif self.state.done:
+            self.flip_state()
+        self.state.update(self.screen, dt)
+    
+    def event_loop(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.done = True
+            self.state.get_event(event)
+        
+    def main_game_loop(self):
+        while not self.done:
+            delta_time = self.clock.tick(self.fps)/1000.0
+            self.event_loop()
+            self.update(delta_time)
+            pg.display.update()
+
+
+
+settings = {
+    'size':(800,800),
+    'fps' :60
+}
+
+#a dictionary containing all the different states available
+state_dict = {
+    'End': End(),
+    'Title': titleScreen(),
+    'LevelOne': LevelOne(),
+    'LevelTwo': LevelTwo(),
+ 
+}
+
+#------------------------------------
+#instantiate a control object named "app"
+#after running this constructor, "app" will have 4 variables:
+#a copy of the settings dictionary, a boolean named "done" set to False,
+#a screen variable holding the pygame display, and a clock variable
+app = Control(**settings)
+#------------------------------------
+
+#------------------------------------
+#the setup_states function passes in the dictionary of available states
+#and also sets what the begnning state will be
+app.setup_states(state_dict, 'Title')
+app.state.startup() #call startup for the initial state, Level One
+#------------------------------------
+
+#------------------------------------
+app.main_game_loop() #OMG GAME LUP!
+
+pg.quit()
+sys.exit()
+            
+   
+    

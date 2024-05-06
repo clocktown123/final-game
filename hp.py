@@ -1,7 +1,7 @@
 import pygame
 
 def Health(screen, player):
-    if player == 1000:
+    if player >= 1000:
         pygame.draw.rect(screen, (255, 6, 0), (55, 55, 100, 20))
     elif player == 900:
         pygame.draw.rect(screen, (255, 6, 0), (55, 55, 90, 20))

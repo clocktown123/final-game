@@ -10,7 +10,7 @@ SPACE = 4
 
 Guy = pygame.image.load('GuySS2.png') #load your spritesheet
 Guy.set_colorkey((255, 0, 255)) #this makes bright pink (255, 0, 255) transparent (sort of)
-expansion = pygame.image.load('malevolent_shrine.png')
+expansion2 = pygame.image.load('malevolent_shrine.png')
 
 
 expansion = pygame.image.load('domain.png')
@@ -30,32 +30,6 @@ class player():
         self.HP = 1000
         self.last = pygame.time.get_ticks()
         self.cooldown = 1500
-
-
-class Gojo(player):
-    def __init__(self):
-        player.__init__(self)
-
-
-    def draw(self, screen):
-        #pygame.draw.rect(screen, (255,0,255), (self.pos.x, self.pos.y, 30, 30))
-        screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
-
-    def domain(self, screen):
-        screen.blit(expansion, (0,0), (0,0, 10000, 10000))
-    
-    def PlayerHp(self, eXpos, eYpos):
-        now = pygame.time.get_ticks()
-        if eXpos + 20 > self.pos.x and eXpos < self.pos.x + 50 and eYpos + 20 > self.pos.y and eYpos < self.pos.y + 50:
-            if now - self.last >= self.cooldown:
-                self.last = now
-                self.HP -= 100
-
-            while self.HP < 500:
-                self.HP += 500
-                print("RCT")
-
-    
 
     def move(self, keys, map):
         #LEFT MOVEMENT
@@ -115,6 +89,39 @@ class Gojo(player):
         self.pos.y+=self.vy
         self.pos.x+=self.vx
 
+    def PlayerHp(self, eXpos, eYpos):
+        now = pygame.time.get_ticks()
+        if eXpos + 20 > self.pos.x and eXpos < self.pos.x + 50 and eYpos + 20 > self.pos.y and eYpos < self.pos.y + 50:
+            if now - self.last >= self.cooldown:
+                self.last = now
+                self.HP -= 100
+    
+    def RCT(self, uses):
+        dif = 1000 - self.HP
+        uses -= 1
+
+
+class Gojo(player):
+    def __init__(self):
+        player.__init__(self)
+
+
+    def draw(self, screen):
+        #pygame.draw.rect(screen, (255,0,255), (self.pos.x, self.pos.y, 30, 30))
+        screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
+
+    def domain(self, screen):
+        screen.blit(expansion, (0,0), (0,0, 10000, 10000))
+    
+    def PlayerHp(self, eXpos, eYpos):
+        player.PlayerHp(self, eXpos, eYpos)
+    
+    def RCT(self, uses):
+        player.RCT(self, uses = 5)
+    
+
+    
+
 
 class Sukuna(player):
     def __init__ (self):
@@ -125,72 +132,16 @@ class Sukuna(player):
         screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
     def domain(self, screen):
-        screen.blit(expansion, (0,0), (0,0, 10000, 10000))
-    
+        screen.blit(expansion2, (0,0), (0,0, 10000, 10000))
+
+    def move(self, keys, map):
+        player.move(self, keys, map)
+
     def PlayerHp(self, eXpos, eYpos):
-        now = pygame.time.get_ticks()
-        if eXpos + 20 > self.pos.x and eXpos < self.pos.x + 50 and eYpos + 20 > self.pos.y and eYpos < self.pos.y + 50:
-            if now - self.last >= self.cooldown:
-                self.last = now
-                self.HP -= 100
+        player.PlayerHp(self, eXpos, eYpos)
 
-            while self.HP < 500:
-                self.HP += 500
-                print("RCT")
-
-    def move(self, keys2, map):
-        #LEFT MOVEMENT
-        if keys2[A] == True:
-            self.vx = -3
-            self.RowNum = 0
-            self.direction = A
-        #RIGHT MOVEMENT
-        elif keys2[D] == True:
-            self.vx = 3
-            self.RowNum = 3
-            self.direction = D
-        #TURN OFF X VELOCITY
-        else:
-            self.vx = 0
-        
-        if keys2[W] == True:
-            self.vy = -3
-            self.RowNum = 1
-            self.direction = W
-        elif keys2[S] == True:
-            self.vy = 3
-            self.RowNum = 2
-            self.direction = S
-        else:
-            self.vy = 0
-        
-        if self.vx<0 or self.vx>0 or self.vy <0 or self.vy>0: #left animation
-        # Ticker is a spedometer. We don't want Chicken animating as fast as the
-        # processor can process! Update Animation Frame each time ticker goes over
-            self.ticker+=1
-        
-        if self.ticker%10==0: #only change frames every 10 ticks
-          self.frameNum+=1
-           #If we are over the number of frames in our sprite, reset to 0.
-           #In this particular case, there are 8 frames (0 through 7)
-        if self.frameNum>7: 
-           self.frameNum = 0
-        
-        
-
-        #COLLISION
-        #LEFT
-        if map [int((self.pos.y-10) / 50)][int((self.pos.x - 10) / 50)] == 2:
-            self.pos.x+=3
-        #RIGHT
-        if map [int((self.pos.y) / 50)][int((self.pos.x +30 + 5) / 50)] == 2:
-            self.pos.x-=3
-        #DOWN
-        if map [int((self.pos.y + 30 + 5) / 50)][int((self.pos.x ) / 50)] == 2:
-            self.pos.y-=3
-        #UP
-        if map [int((self.pos.y - 20) / 50)][int((self.pos.x) / 50)] == 2:
-            self.pos.y+=3
-
-        self.pos.y+=self.vy
-        self.pos.x+=self.vx
+    
+    
+    def RCT(self, uses):
+        player.RCT(self, uses = 5)
+    

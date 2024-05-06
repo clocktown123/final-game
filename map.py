@@ -13,3 +13,4 @@ def MapF (screen, map):
                 screen.blit(brick, (j *50, i * 50), (0, 0, 50, 50))
             if map[i][j] == 3:
                 screen.blit(lava, (j *50, i * 50), (0, 0, 50, 50))
+
