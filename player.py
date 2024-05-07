@@ -98,6 +98,7 @@ class player():
     
     def RCT(self, uses):
         dif = 1000 - self.HP
+        self.HP += dif
         uses -= 1
 
 
