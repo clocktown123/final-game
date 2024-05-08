@@ -1,10 +1,13 @@
 import pygame
+import time
 from pygame.math import Vector2
+import random
 A = 0
 D = 1
 W = 2
 S = 3
 SPACE = 4
+E = 7
 
 
 
@@ -12,6 +15,7 @@ Guy = pygame.image.load('GuySS2.png') #load your spritesheet
 Guy.set_colorkey((255, 0, 255)) #this makes bright pink (255, 0, 255) transparent (sort of)
 expansion2 = pygame.image.load('malevolent_shrine.png')
 
+sparks = pygame.image.load('Blackflash.png')
 
 expansion = pygame.image.load('domain.png')
 
@@ -30,6 +34,14 @@ class player():
         self.HP = 1000
         self.last = pygame.time.get_ticks()
         self.cooldown = 1500
+        self.blackflash = False
+        self.sparkX = self.pos.x
+        self.sparkY = self.pos.y - 30
+        self.Ryoki_Tenkai = False
+        self.CD = 0
+        self.isOnCooldown = False
+        self.cooldown_duration = 5
+        self.last_used_time = 0
 
     def move(self, keys, map):
         #LEFT MOVEMENT
@@ -97,9 +109,22 @@ class player():
                 self.HP -= 100
     
     def RCT(self, uses):
-        dif = 1000 - self.HP
-        self.HP += dif
+        #print(self.HP)
+        self.HP = 1000
         uses -= 1
+
+    def Blackflash(self, screen):
+        chance = random.randrange(1, 11)
+        if chance == 1:
+            self.blackflash = True
+            if self.blackflash == True:
+                screen.blit(sparks, (self.pos.x, self.pos.y - 30) )
+        else:
+            print("improve your focus")
+        
+    #def Bcollision(self, ExPos, EyPos):
+        #if 
+        
 
 
 class Gojo(player):
@@ -113,12 +138,17 @@ class Gojo(player):
 
     def domain(self, screen):
         screen.blit(expansion, (0,0), (0,0, 10000, 10000))
+        self.Ryoki_Tenkai = True
+        self.CD -= 1000
     
     def PlayerHp(self, eXpos, eYpos):
         player.PlayerHp(self, eXpos, eYpos)
     
     def RCT(self, uses):
         player.RCT(self, uses = 5)
+    
+    def Blackflash(self, screen):
+        player.Blackflash(self, screen)
     
 
     
@@ -135,13 +165,31 @@ class Sukuna(player):
     def domain(self, screen):
         screen.blit(expansion2, (0,0), (0,0, 10000, 10000))
 
+      # current_time = time.time()
+
+      # if current_time - self.last_used_time >= self.cooldown_duration:
+      #     print("cd started")
+      #     self.last_used_time = current_time
+      # else:
+      #     print("move is on cd")
+      # self.isOnCooldown = True
+      # self.Ryoki_Tenkai = True
+      # self.CD += 50000
+      # while self.isOnCooldown == True:
+      #     self.CD -= 10
+      #     if self.CD <= 0:
+      #         self.isOnCooldown = False
+              
+
+
     def move(self, keys, map):
         player.move(self, keys, map)
 
     def PlayerHp(self, eXpos, eYpos):
         player.PlayerHp(self, eXpos, eYpos)
 
-    
+    def Blackflash(self, screen):
+        player.Blackflash(self, screen)
     
     def RCT(self, uses):
         player.RCT(self, uses = 5)

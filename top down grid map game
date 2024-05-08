@@ -9,6 +9,7 @@ from cleave import Cleave
 from enemy import Enemy 
 from pygame import mixer
 import pygame as pg
+
 import sys
 import time
 mixer.init()
@@ -27,9 +28,13 @@ S = 3
 SPACE = 4
 F = 5
 R = 6
-keys2 = [False, False, False, False, False, False, False]
+E = 7
+keys2 = [False, False, False, False, False, False, False, False]
 show_time = 10000
 start_time = pygame.time.get_ticks()
+
+black_show_time = 5000
+black_start_time = pygame.time.get_ticks()
 #show_time_interger = int(show_time)
 
 p1 = Gojo()
@@ -58,6 +63,11 @@ mouseDown = False
 ticker = 0
 
 mapNum = 1
+
+# Cooldown variables
+cooldown_active = False
+cooldown_start_time = 0
+cooldown_duration = 50  # in seconds
 
 map = [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
        [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
@@ -110,7 +120,7 @@ def draw_text(text, font, text_col, tx, ty):
             
        
     
-while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP######################################################
+while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP######################################################
     #pygame.mixer.Sound.play(music)
     clock.tick(60) # fps
     ticker+=1
@@ -126,8 +136,16 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
                 counter += 1
             if event.key == pygame.K_f:
                 keys2[F] = True
+              # if not cooldown_active:
+              #     print("Domain Started")
+              #     cooldown_active = True
+              #     cooldown_start_time = time.time()
+
             if event.key == pygame.K_r:
                 keys2[R] = True
+            
+            if event.key == pygame.K_e:
+                keys2[E] = True
             
             if event.key == pygame.K_a:
                 keys2[A] = True
@@ -143,9 +161,17 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
                 #RowNum = 2
             elif event.type == pygame.KEYDOWN:
                 start_time = pygame.time.get_ticks()
+
+    
+                
+            #elif event.type == pygame.KEYDOWN:
+                #black_start_time = pygame.time.get_ticks()
         
         if pygame.time.get_ticks() - start_time >= show_time:
             break
+
+        #if pygame.time.get_ticks() - black_start_time >= black_show_time:
+            #break
         
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_SPACE:
@@ -154,6 +180,9 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
                 #keys2[F] = False
             if event.key == pygame.K_r:
                 keys2[R] = False
+
+            if event.key == pygame.K_e:
+                keys2[E] = False
                 
 
             if event.key == pygame.K_a:
@@ -184,23 +213,38 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_q:
                 quitGame = False
+                
+    #if cooldown_active:
+    #    current_time = time.time()
+    #    elapsed_time = current_time - cooldown_start_time
+    #    if elapsed_time >= cooldown_duration:
+    #        cooldown_active = False
+    #        print("Cooldown ended!")
     #physics section-------------------------------------------------------
+    if keys2[SPACE] == True:
+        ball.shoot(p1.pos.x, p1.pos.y, p1.direction)
+        ball.hollow = True
+        
+    
 
+    if keys2[SPACE] == True:
+        cleave.shoot(p2.pos.x, p2.pos.y, p2.direction)
+        
     if counter > 10:
         counter = 0
 
-    if mapNum == 1:
-        p1.move(keys2 , map)
-        p2.move(keys2, map)
-    elif mapNum == 2:
-        p1.move(keys2 , map2)
-        p2.move(keys2, map2)
+    #if mapNum == 1:
+    p1.move(keys2 , map)
+    p2.move(keys2, map)
+    #elif mapNum == 2:
+        #p1.move(keys2 , map2)
+        #p2.move(keys2, map2)
 
     ball.move(p1.direction)
     cleave.move(p2.direction)
 
-    e1.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y)
-    e2.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y)
+    e1.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y, ball.hollow)
+    e2.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y, ball.hollow)
     p1.PlayerHp(e1.pos.x, e1.pos.y)
     p2.PlayerHp(e1.pos.x, e1.pos.y)
     p1.PlayerHp(e2.pos.x, e2.pos.y)
@@ -208,9 +252,11 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
 
     if state == 2:
         if mapNum == 1:
-            e1.move(map, ticker, p1.pos.x, p1.pos.y)
+            if p1.Ryoki_Tenkai == False:
+                e1.move(map, ticker, p1.pos.x, p1.pos.y)
         if mapNum == 2:
-            e2.move(map2, ticker, p1.pos.x, p1.pos.y)
+            if p1.Ryoki_Tenkai == False:   
+                e2.move(map2, ticker, p1.pos.x, p1.pos.y)
         if keys2[R] == True and uses > 0:
             p1.RCT(uses)
     if state == 3:
@@ -218,22 +264,18 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
             e1.move(map, ticker, p2.pos.x, p2.pos.y)
         elif mapNum == 2:
             e2.move(map2, ticker, p2.pos.x, p2.pos.y)
-        while keys2[R] == True and uses > 0:
+        if keys2[R] == True and uses > 0:
             p2.RCT(uses)
+            #p2.HP += 1000
+
+        #else:
+            #print("No more RCT")
             #uses -= 1
             #print(uses)
             #RCT(p2.HP)
             #print(p2.HP)
             
-    if keys2[SPACE] == True:
-        ball.shoot(p1.pos.x, p1.pos.y, p1.direction)
-        
     
-
-    if keys2[SPACE] == True:
-        cleave.shoot(p2.pos.x, p2.pos.y, p2.direction)
-        
-        
        
 
      #ANIMATION-------------------------------------------------------------------
@@ -287,10 +329,6 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
     if state == 2 or state == 3 or state == 4:
         screen.fill((128,128,128))
 
-        if mapNum == 1:
-            e1.draw(screen)
-        elif mapNum == 2:
-            e2.draw(screen)
 
         if e1.isAlive == False:
             mapNum = 2
@@ -310,6 +348,9 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
                 p1.domain(screen)
             if pygame.time.get_ticks() - start_time >= show_time:
                 keys2[F] = False
+                p1.Ryoki_Tenkai = False
+                
+                
 
     
             if ball.isAlive == True and counter < 10:
@@ -321,13 +362,31 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
         
         elif state == 3:
             if keys2[F] == True:
+                p2.CD += 50000
                 p2.domain(screen)
+                if mapNum == 1:
+                    e1.HP -= 5
+                    if e1.HP <= 0:
+                        e1.isAlive = False
+                elif mapNum == 2:
+                    e2.HP -=5
+                    if e2.HP <= 0:
+                        e2.isAlive = False
+                print(e1.HP)
             if pygame.time.get_ticks() - start_time >= show_time:
                 keys2[F] = False
+                p2.Ryoki_Tenkai = False
+                
+            #print(p2.CD)
 
             if cleave.isAlive == True and counter < 10:
                 cleave.draw(screen)
-            
+        
+
+        if mapNum == 1:
+            e1.draw(screen)
+        elif mapNum == 2:
+            e2.draw(screen)
             
                 
         #Special Bar ----------------------------------------------------------------------
@@ -361,11 +420,19 @@ while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP#################################
         if state == 2:
             p1.draw(screen)
             Health(screen, p1.HP)
+            #if keys2[E] == True:
+                #p1.Blackflash(screen)
+            #if pygame.time.get_ticks() - black_start_time >= black_show_time:
+                #keys2[E] = False
         if state == 3:
             p2.draw(screen)
             Health(screen, p2.HP)
+            #if keys2[E] == True:
+                #p2.Blackflash(screen)
+            #if pygame.time.get_ticks() - black_start_time >= black_show_time:
+                #keys2[E] = False
         #elif state == 3:
-            
+        
     
     pygame.display.flip()#this actually puts the pixel on the screen
 

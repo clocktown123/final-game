@@ -2,6 +2,8 @@ import pygame
 import random
 import math
 from pygame.math import Vector2
+from limitless import fireball
+
 
 A = 0
 D = 1
@@ -13,13 +15,24 @@ class Enemy:
         self.pos = Vector2(400,200)
         self.direction = D
         self.isAlive = True
+        self.HP = 1000
     
-    def die(self, ballx, bally, cleavex, cleavey):
+    def die(self, ballx, bally, cleavex, cleavey, hollow):
         if math.sqrt((self.pos.x-ballx)**2 + (self.pos.y-bally)**2) <= 20:
-            self.isAlive = False
-
+            if hollow == True:
+                self.HP -= 200
+                if self.HP < 0:
+                    self.isAlive = False
+            else:
+                self.HP -= 100
+                if self.HP < 0:
+                    self.isAlive = False
         if math.sqrt((self.pos.x-cleavex)**2 + (self.pos.y-cleavey)**2) <= 20:
-            self.isAlive = False
+            self.HP -= 100
+            if self.HP < 0:
+                self.isAlive = False
+
+        
     
     def draw(self, screen):
         if self.isAlive == True:
@@ -51,6 +64,17 @@ class Enemy:
             else:
                 self.pos.y+=1
                 self.direction = S
+
+       # # Calculate distance between enemy and player
+       # dx = px - self.pos.x
+       # dy = py - self.pos.y
+       # distance = math.sqrt(dx ** 2 + dy ** 2)
+#
+       # # If player is within a certain distance, track the player
+       # if distance < 200:
+       #     speed = 1
+       #     self.pos.x += dx / distance * speed
+       #     self.pos.y += dy / distance * speed
         
         if self.direction == D and map[int((self.pos.y) / 50)][int((self.pos.x + 20) / 50)] == 2:
             self.direction = W
@@ -79,8 +103,8 @@ class Frog(Enemy):
     def __init__(self):
         Enemy.__init__(self)
 
-    def die(self, ballx, bally, cleavex, cleavey):
-        Enemy.die(self, ballx, bally, cleavex, cleavey)
+    def die(self, ballx, bally, cleavex, cleavey, hollow):
+        Enemy.die(self, ballx, bally, cleavex, cleavey, hollow)
 
 
     def move(self, map, ticker, px, py):
@@ -95,8 +119,8 @@ class Normcurse(Enemy):
     def __init__(self):
         Enemy.__init__(self)
 
-    def die(self, ballx, bally, cleavex, cleavey):
-        Enemy.die(self, ballx, bally, cleavex, cleavey)
+    def die(self, ballx, bally, cleavex, cleavey, hollow):
+        Enemy.die(self, ballx, bally, cleavex, cleavey, hollow)
 
 
     def move(self, map, ticker, px, py):

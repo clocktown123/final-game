@@ -15,14 +15,15 @@ class fireball:
         self.pos = Vector2(-10,-10)
         self.isAlive = False
         self.direction = RIGHT
+        self.hollow = False
 
     def shoot(self, x, y, dir):
         self.pos.x = x + 20 # start fireball at center of player
         self.pos.y = y +20
         self.isAlive = True
+        self.damage = 100
         self.direction = dir
 
-       
 
     def move(self, dir):
         if self.direction == RIGHT:
@@ -33,6 +34,7 @@ class fireball:
             self.pos.y+=20
         elif self.direction == UP:
             self.pos.y-=20
+        
         
     def draw(self,screen):
         self.rando = random.randrange(0, 2)
@@ -50,8 +52,9 @@ class fireball:
             pygame.draw.circle(screen, (65,105,255), (self.pos.x, self.pos.y), 5)
     
     def B_draw(self, screen):
-        pygame.draw.circle(screen, (138,43,226), (self.pos.x, self.pos.y), 30)
-        pygame.draw.circle(screen, (147,112,219), (self.pos.x, self.pos.y), 15)
+        if self.hollow == True:
+            pygame.draw.circle(screen, (138,43,226), (self.pos.x, self.pos.y), 30)
+            pygame.draw.circle(screen, (147,112,219), (self.pos.x, self.pos.y), 15)
 
     def collide(self, x, y):
         if math.sqrt((self.pos.x - x) **2 + (self.pos.y - y) **2) < 25:
