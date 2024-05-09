@@ -9,6 +9,7 @@ from cleave import Cleave
 from enemy import Enemy 
 from pygame import mixer
 import pygame as pg
+import asyncio
 
 import sys
 import time
@@ -36,9 +37,9 @@ start_time = pygame.time.get_ticks()
 black_show_time = 5000
 black_start_time = pygame.time.get_ticks()
 #show_time_interger = int(show_time)
-
-p1 = Gojo()
-p2 = Sukuna()
+cooldown_seconds = 5
+p1 = Gojo(cooldown_seconds)
+p2 = Sukuna(cooldown_seconds)
 ball = fireball()
 cleave = Cleave()
 e1 = Enemy()
@@ -65,9 +66,12 @@ ticker = 0
 mapNum = 1
 
 # Cooldown variables
-cooldown_active = False
-cooldown_start_time = 0
-cooldown_duration = 50  # in seconds
+cooldown = 50000
+isOnCooldown = True
+
+
+
+#global cooldown_tracker
 
 map = [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
        [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
@@ -117,13 +121,16 @@ text_font = pygame.font.SysFont("Sans", 30, bold = True)
 def draw_text(text, font, text_col, tx, ty):
     img = font.render(text, True, text_col)
     screen.blit(img, (tx, ty))
-            
+
+
+ 
        
-    
+cooldown_tracker = 0
 while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP######################################################
     #pygame.mixer.Sound.play(music)
     clock.tick(60) # fps
     ticker+=1
+    later = pygame.time.get_ticks()
     #input section--------------------------------------------------
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -136,6 +143,8 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
                 counter += 1
             if event.key == pygame.K_f:
                 keys2[F] = True
+                now = pygame.time.get_ticks()
+
               # if not cooldown_active:
               #     print("Domain Started")
               #     cooldown_active = True
@@ -362,7 +371,6 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
         
         elif state == 3:
             if keys2[F] == True:
-                p2.CD += 50000
                 p2.domain(screen)
                 if mapNum == 1:
                     e1.HP -= 5

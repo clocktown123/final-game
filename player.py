@@ -2,6 +2,8 @@ import pygame
 import time
 from pygame.math import Vector2
 import random
+clock = pygame.time.Clock()
+import asyncio
 A = 0
 D = 1
 W = 2
@@ -20,7 +22,7 @@ sparks = pygame.image.load('Blackflash.png')
 expansion = pygame.image.load('domain.png')
 
 class player():
-    def __init__ (self):
+    def __init__ (self, cooldown_seconds):
         #player variables
         self.pos = Vector2(200,615)
         self.vx = 0
@@ -42,6 +44,7 @@ class player():
         self.isOnCooldown = False
         self.cooldown_duration = 5
         self.last_used_time = 0
+        self.cooldown_seconds = cooldown_seconds
 
     def move(self, keys, map):
         #LEFT MOVEMENT
@@ -128,8 +131,8 @@ class player():
 
 
 class Gojo(player):
-    def __init__(self):
-        player.__init__(self)
+    def __init__(self,cooldown_seconds):
+        player.__init__(self, cooldown_seconds)
 
 
     def draw(self, screen):
@@ -155,8 +158,10 @@ class Gojo(player):
 
 
 class Sukuna(player):
-    def __init__ (self):
-        player.__init__(self)
+    def __init__ (self, cooldown_seconds):
+        player.__init__(self, cooldown_seconds)
+        self.last_press_time = 0
+        
 
     def draw(self, screen):
         #pygame.draw.rect(screen, (255,0,255), (self.pos2.x, self.ypos2, 30, 30))
@@ -165,20 +170,8 @@ class Sukuna(player):
     def domain(self, screen):
         screen.blit(expansion2, (0,0), (0,0, 10000, 10000))
 
-      # current_time = time.time()
 
-      # if current_time - self.last_used_time >= self.cooldown_duration:
-      #     print("cd started")
-      #     self.last_used_time = current_time
-      # else:
-      #     print("move is on cd")
-      # self.isOnCooldown = True
-      # self.Ryoki_Tenkai = True
-      # self.CD += 50000
-      # while self.isOnCooldown == True:
-      #     self.CD -= 10
-      #     if self.CD <= 0:
-      #         self.isOnCooldown = False
+        
               
 
 

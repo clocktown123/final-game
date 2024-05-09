@@ -4,7 +4,7 @@ brick = pygame.image.load('brick.png')
 dirt = pygame.image.load('dirt.png')
 lava = pygame.image.load('lava.png')
 
-def MapF (screen, map):
+def MapF(screen, map):
     for i in range(20):
         for j in range(20):
             if map[i][j] == 1:
