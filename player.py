@@ -41,12 +41,24 @@ class player():
         self.sparkY = self.pos.y - 30
         self.Ryoki_Tenkai = False
         self.CD = 0
-        self.isOnCooldown = False
-        self.cooldown_duration = 5
-        self.last_used_time = 0
-        self.cooldown_seconds = cooldown_seconds
+        self.imageTimer = 0
+        self.uses = 5
+        
 
-    def move(self, keys, map):
+    def move(self, delta, keys, map):
+        # increase timer if it's below 0, otherwise set it to 0
+        if self.CD < 0:
+            self.CD += delta
+            print(self.CD)
+        elif self.CD > 0:
+            self.CD = 0
+
+        if self.imageTimer < 0:
+            self.imageTimer += delta
+            print(self.imageTimer)
+        elif self.imageTimer > 0:
+            self.imageTimer = 0
+
         #LEFT MOVEMENT
         if keys[A] == True:
             self.vx = -3
@@ -111,10 +123,10 @@ class player():
                 self.last = now
                 self.HP -= 100
     
-    def RCT(self, uses):
+    def RCT(self):
         #print(self.HP)
         self.HP = 1000
-        uses -= 1
+        self.uses -= 1
 
     def Blackflash(self, screen):
         chance = random.randrange(1, 11)
@@ -132,58 +144,53 @@ class player():
 
 class Gojo(player):
     def __init__(self,cooldown_seconds):
-        player.__init__(self, cooldown_seconds)
+        super().__init__(cooldown_seconds)
 
 
     def draw(self, screen):
         #pygame.draw.rect(screen, (255,0,255), (self.pos.x, self.pos.y, 30, 30))
+        if self.imageTimer < 0:
+            screen.blit(expansion, (0,0), (0,0, 10000, 10000))
         screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
-    def domain(self, screen):
-        screen.blit(expansion, (0,0), (0,0, 10000, 10000))
-        self.Ryoki_Tenkai = True
-        self.CD -= 1000
-    
-    def PlayerHp(self, eXpos, eYpos):
-        player.PlayerHp(self, eXpos, eYpos)
-    
-    def RCT(self, uses):
-        player.RCT(self, uses = 5)
-    
-    def Blackflash(self, screen):
-        player.Blackflash(self, screen)
-    
-
-    
+    def domain(self):
+        if self.CD == 0:
+            self.Ryoki_Tenkai = True
+            self.CD = -30
+            self.imageTimer = -10
 
 
 class Sukuna(player):
     def __init__ (self, cooldown_seconds):
-        player.__init__(self, cooldown_seconds)
+        super().__init__(cooldown_seconds)
         self.last_press_time = 0
         
 
     def draw(self, screen):
         #pygame.draw.rect(screen, (255,0,255), (self.pos2.x, self.ypos2, 30, 30))
+        if self.imageTimer < 0:
+            screen.blit(expansion2, (0,0), (0,0, 10000, 10000))
         screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
-    def domain(self, screen):
-        screen.blit(expansion2, (0,0), (0,0, 10000, 10000))
-
-
-        
-              
-
-
-    def move(self, keys, map):
-        player.move(self, keys, map)
-
-    def PlayerHp(self, eXpos, eYpos):
-        player.PlayerHp(self, eXpos, eYpos)
-
-    def Blackflash(self, screen):
-        player.Blackflash(self, screen)
+    def domain(self):
+        if self.CD == 0:
+            self.Ryoki_Tenkai = True 
+            self.CD -= 30
+            self.imageTimer = -10
     
-    def RCT(self, uses):
-        player.RCT(self, uses = 5)
+    def domainDamage(self, enemy):
+        enemy.HP -= 5
+        if enemy.HP <= 0:
+             enemy.isAlive = False
+
+    # def Cooldown(self):
+    #     self.CD = 5
+    #     if self.CD > 0:
+    #         self.CD -= 10
+    #         print("working")
+
+    #     print(self.CD)
+
+     
+            
     

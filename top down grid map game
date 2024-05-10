@@ -66,8 +66,8 @@ ticker = 0
 mapNum = 1
 
 # Cooldown variables
-cooldown = 50000
-isOnCooldown = True
+
+#isOnCooldown = True
 
 
 
@@ -125,10 +125,10 @@ def draw_text(text, font, text_col, tx, ty):
 
  
        
-cooldown_tracker = 0
+#cooldown_tracker = 0
 while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP######################################################
     #pygame.mixer.Sound.play(music)
-    clock.tick(60) # fps
+    delta = clock.tick(60) / 1000 # fps
     ticker+=1
     later = pygame.time.get_ticks()
     #input section--------------------------------------------------
@@ -141,8 +141,16 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
             if event.key == pygame.K_SPACE:
                 keys2[SPACE] = True
                 counter += 1
+
+          
             if event.key == pygame.K_f:
                 keys2[F] = True
+
+                if state == 2:
+                    p1.domain()
+                elif state == 2:
+                    p2.domain()
+                  
                 now = pygame.time.get_ticks()
 
               # if not cooldown_active:
@@ -168,7 +176,7 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
             if event.key == pygame.K_s:
                 keys2[S] = True
                 #RowNum = 2
-            elif event.type == pygame.KEYDOWN:
+            else:
                 start_time = pygame.time.get_ticks()
 
     
@@ -243,8 +251,8 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
         counter = 0
 
     #if mapNum == 1:
-    p1.move(keys2 , map)
-    p2.move(keys2, map)
+    p1.move(delta, keys2, map)
+    p2.move(delta, keys2, map)
     #elif mapNum == 2:
         #p1.move(keys2 , map2)
         #p2.move(keys2, map2)
@@ -267,14 +275,14 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
             if p1.Ryoki_Tenkai == False:   
                 e2.move(map2, ticker, p1.pos.x, p1.pos.y)
         if keys2[R] == True and uses > 0:
-            p1.RCT(uses)
+            p1.RCT()
     if state == 3:
         if mapNum == 1:
             e1.move(map, ticker, p2.pos.x, p2.pos.y)
         elif mapNum == 2:
             e2.move(map2, ticker, p2.pos.x, p2.pos.y)
         if keys2[R] == True and uses > 0:
-            p2.RCT(uses)
+            p2.RCT()
             #p2.HP += 1000
 
         #else:
@@ -353,8 +361,8 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
         #GOJO---------------------------------------------------------------
 
         if state == 2:
-            if keys2[F] == True:
-                p1.domain(screen)
+            # if keys2[F] == True:
+            #     p1.domain(screen)
             if pygame.time.get_ticks() - start_time >= show_time:
                 keys2[F] = False
                 p1.Ryoki_Tenkai = False
@@ -371,21 +379,20 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
         
         elif state == 3:
             if keys2[F] == True:
-                p2.domain(screen)
+
+
                 if mapNum == 1:
-                    e1.HP -= 5
-                    if e1.HP <= 0:
-                        e1.isAlive = False
+                    p2.domainDamage(e1)
                 elif mapNum == 2:
-                    e2.HP -=5
-                    if e2.HP <= 0:
-                        e2.isAlive = False
-                print(e1.HP)
+                    p2.domainDamage(e2)
+             
             if pygame.time.get_ticks() - start_time >= show_time:
                 keys2[F] = False
                 p2.Ryoki_Tenkai = False
                 
             #print(p2.CD)
+
+
 
             if cleave.isAlive == True and counter < 10:
                 cleave.draw(screen)
