@@ -158,9 +158,12 @@ class Gojo(player):
     def draw(self, screen):
         #pygame.draw.rect(screen, (255,0,255), (self.pos.x, self.pos.y, 30, 30))
         if self.imageTimer < 0:
-            pygame.time.wait(9000)
+            #pygame.time.wait(9000)
             screen.blit(expansion, (0,0), (0,0, 10000, 10000))
         screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
+
+        if self.imageTimer >= 0:
+            self.Ryoki_Tenkai = False
 
     def domain(self):
         if self.CD == 0:

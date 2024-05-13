@@ -368,14 +368,6 @@ while p1.HP > 0 or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#########
                 keys2[F] = False
                 p1.Ryoki_Tenkai = False
                 
-<<<<<<< HEAD
-            
-=======
-                
-
-    
-
->>>>>>> 0f3b7843aa5cbcbb5a42e8c75827352065c6550a
         
         #SUKUNA-----------------------------------------------------------
         
@@ -393,13 +385,6 @@ while p1.HP > 0 or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#########
                 p2.Ryoki_Tenkai = False
                 
             #print(p2.CD)
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> 0f3b7843aa5cbcbb5a42e8c75827352065c6550a
         
 
             
@@ -444,18 +429,15 @@ while p1.HP > 0 or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#########
         if state == 3:
             p2.draw(screen)
             Health(screen, p2.HP)
-<<<<<<< HEAD
 
             if cleave.isAlive == True and counter < 10:
                 cleave.draw(screen)
             
-=======
             #if keys2[E] == True:
                 #p2.Blackflash(screen)
             #if pygame.time.get_ticks() - black_start_time >= black_show_time:
                 #keys2[E] = False
         #elif state == 3:
->>>>>>> 0f3b7843aa5cbcbb5a42e8c75827352065c6550a
 
         if mapNum == 1:
             e1.draw(screen)
