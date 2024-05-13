@@ -126,7 +126,7 @@ def draw_text(text, font, text_col, tx, ty):
  
        
 #cooldown_tracker = 0
-while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP######################################################
+while p1.HP > 0 or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP######################################################
     #pygame.mixer.Sound.play(music)
     delta = clock.tick(60) / 1000 # fps
     ticker+=1
@@ -346,6 +346,7 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
     if state == 2 or state == 3 or state == 4:
         screen.fill((128,128,128))
 
+        
 
         if e1.isAlive == False:
             mapNum = 2
@@ -367,7 +368,14 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
                 keys2[F] = False
                 p1.Ryoki_Tenkai = False
                 
+<<<<<<< HEAD
             
+=======
+                
+
+    
+
+>>>>>>> 0f3b7843aa5cbcbb5a42e8c75827352065c6550a
         
         #SUKUNA-----------------------------------------------------------
         
@@ -385,10 +393,13 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
                 p2.Ryoki_Tenkai = False
                 
             #print(p2.CD)
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> 0f3b7843aa5cbcbb5a42e8c75827352065c6550a
         
 
             
@@ -433,16 +444,33 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
         if state == 3:
             p2.draw(screen)
             Health(screen, p2.HP)
+<<<<<<< HEAD
 
             if cleave.isAlive == True and counter < 10:
                 cleave.draw(screen)
             
+=======
+            #if keys2[E] == True:
+                #p2.Blackflash(screen)
+            #if pygame.time.get_ticks() - black_start_time >= black_show_time:
+                #keys2[E] = False
+        #elif state == 3:
+>>>>>>> 0f3b7843aa5cbcbb5a42e8c75827352065c6550a
 
         if mapNum == 1:
             e1.draw(screen)
         elif mapNum == 2:
             e2.draw(screen)
         
+        if state == 2:
+            if ball.isAlive == True and counter < 10:
+                ball.draw(screen)
+            else:
+                ball.B_draw(screen)
+
+        if state == 3:
+            if cleave.isAlive == True and counter < 10:
+                cleave.draw(screen)
     
     pygame.display.flip()#this actually puts the pixel on the screen
 
