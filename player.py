@@ -4,6 +4,11 @@ from pygame.math import Vector2
 import random
 clock = pygame.time.Clock()
 import asyncio
+from pygame import mixer
+
+mixer.init()
+
+
 A = 0
 D = 1
 W = 2
@@ -20,6 +25,9 @@ expansion2 = pygame.image.load('malevolent_shrine.png')
 sparks = pygame.image.load('Blackflash.png')
 
 expansion = pygame.image.load('domain.png')
+
+void = pygame.mixer.Sound("Infinite_void.mp3")
+
 
 class player():
     def __init__ (self, cooldown_seconds):
@@ -150,11 +158,13 @@ class Gojo(player):
     def draw(self, screen):
         #pygame.draw.rect(screen, (255,0,255), (self.pos.x, self.pos.y, 30, 30))
         if self.imageTimer < 0:
+            pygame.time.wait(9000)
             screen.blit(expansion, (0,0), (0,0, 10000, 10000))
         screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
     def domain(self):
         if self.CD == 0:
+            pygame.mixer.Sound.play(void)
             self.Ryoki_Tenkai = True
             self.CD = -30
             self.imageTimer = -10
