@@ -28,6 +28,7 @@ expansion = pygame.image.load('domain.png')
 
 void = pygame.mixer.Sound("Infinite_void.mp3")
 
+shrine = pygame.mixer.Sound("Melevolent_Shrine.mp3")
 
 class player():
     def __init__ (self, cooldown_seconds):
@@ -158,8 +159,9 @@ class Gojo(player):
     def draw(self, screen):
         #pygame.draw.rect(screen, (255,0,255), (self.pos.x, self.pos.y, 30, 30))
         if self.imageTimer < 0:
-            pygame.time.wait(9000)
-            screen.blit(expansion, (0,0), (0,0, 10000, 10000))
+            #pygame.time.wait(9000)
+            if pygame.mixer.Sound.get_num_channels(void) == 0:
+                screen.blit(expansion, (0,0), (0,0, 10000, 10000))
         screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
     def domain(self):
@@ -167,7 +169,7 @@ class Gojo(player):
             pygame.mixer.Sound.play(void)
             self.Ryoki_Tenkai = True
             self.CD = -30
-            self.imageTimer = -10
+            self.imageTimer = -20
 
 
 class Sukuna(player):
@@ -179,16 +181,19 @@ class Sukuna(player):
     def draw(self, screen):
         #pygame.draw.rect(screen, (255,0,255), (self.pos2.x, self.ypos2, 30, 30))
         if self.imageTimer < 0:
+            #if pygame.mixer.Sound.get_num_channels(shrine) == 0:
             screen.blit(expansion2, (0,0), (0,0, 10000, 10000))
         screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
     def domain(self):
         if self.CD == 0:
+            #pygame.mixer.Sound.play(shrine)
             self.Ryoki_Tenkai = True 
             self.CD -= 30
-            self.imageTimer = -10
+            self.imageTimer = -20
     
     def domainDamage(self, enemy):
+        #if pygame.mixer.Sound.get_num_channels(shrine) == 0:
         enemy.HP -= 5
         if enemy.HP <= 0:
              enemy.isAlive = False
