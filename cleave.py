@@ -11,6 +11,7 @@ SPACE = 4
 F = 5
 
 slash = pygame.image.load('cleave.png')
+WCS = pygame.image.load('world_cut.png')
 
 class Cleave:
     def __init__(self):
@@ -39,6 +40,9 @@ class Cleave:
         
     def draw(self,screen):
         screen.blit(slash, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
+    
+    def Wdraw(self, screen):
+        screen.blit(WCS, (self.pos.x, self.pos.y))
     
 
     def collide(self, x, y):

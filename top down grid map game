@@ -431,6 +431,8 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
 
             if cleave.isAlive == True and counter < 10:
                 cleave.draw(screen)
+            else:
+                cleave.Wdraw(screen)
             
 
             #if keys2[E] == True:
@@ -444,6 +446,7 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
             e1.draw(screen)
         elif mapNum == 2:
             e2.draw(screen)
+        
         
     
     pygame.display.flip()#this actually puts the pixel on the screen

@@ -30,6 +30,9 @@ void = pygame.mixer.Sound("Infinite_void.mp3")
 
 shrine = pygame.mixer.Sound("Melevolent_Shrine.mp3")
 
+sukuna = pygame.image.load('sukuna.png')
+sukuna.set_colorkey((255,0,255))
+
 class player():
     def __init__ (self, cooldown_seconds):
         #player variables
@@ -52,7 +55,7 @@ class player():
         self.CD = 0
         self.imageTimer = 0
         self.uses = 5
-        
+        self.o = False
 
     def move(self, delta, keys, map):
         # increase timer if it's below 0, otherwise set it to 0
@@ -181,22 +184,26 @@ class Sukuna(player):
     def draw(self, screen):
         #pygame.draw.rect(screen, (255,0,255), (self.pos2.x, self.ypos2, 30, 30))
         if self.imageTimer < 0:
-            #if pygame.mixer.Sound.get_num_channels(shrine) == 0:
-            screen.blit(expansion2, (0,0), (0,0, 10000, 10000))
-        screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
+            if pygame.mixer.Sound.get_num_channels(shrine) == 0:
+                self.o = True
+                screen.blit(expansion2, (0,0), (0,0, 10000, 10000))
+            else:
+                self.o = False
+        screen.blit(sukuna, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
     def domain(self):
         if self.CD == 0:
-            #pygame.mixer.Sound.play(shrine)
+            pygame.mixer.Sound.play(shrine)
             self.Ryoki_Tenkai = True 
-            self.CD -= 30
-            self.imageTimer = -20
+            self.CD -= 57
+            self.imageTimer = -27 
     
     def domainDamage(self, enemy):
         #if pygame.mixer.Sound.get_num_channels(shrine) == 0:
-        enemy.HP -= 5
-        if enemy.HP <= 0:
-             enemy.isAlive = False
+        if self.o == True:
+            enemy.HP -= 5
+            if enemy.HP <= 0:
+                enemy.isAlive = False
 
     # def Cooldown(self):
     #     self.CD = 5
