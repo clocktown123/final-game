@@ -33,6 +33,9 @@ shrine = pygame.mixer.Sound("Melevolent_Shrine.mp3")
 sukuna = pygame.image.load('sukuna.png')
 sukuna.set_colorkey((255,0,255))
 
+gojo = pygame.image.load('Gojo.png')
+gojo.set_colorkey((255,0,255))
+
 class player():
     def __init__ (self, cooldown_seconds):
         #player variables
@@ -79,7 +82,7 @@ class player():
         #RIGHT MOVEMENT
         elif keys[D] == True:
             self.vx = 3
-            self.RowNum = 3
+            self.RowNum = 2
             self.direction = D
         #TURN OFF X VELOCITY
         else:
@@ -165,7 +168,7 @@ class Gojo(player):
             #pygame.time.wait(9000)
             if pygame.mixer.Sound.get_num_channels(void) == 0:
                 screen.blit(expansion, (0,0), (0,0, 10000, 10000))
-        screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
+        screen.blit(gojo, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
     def domain(self):
         if self.CD == 0:

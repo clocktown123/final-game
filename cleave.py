@@ -11,7 +11,14 @@ SPACE = 4
 F = 5
 
 slash = pygame.image.load('cleave.png')
+slash2 = pygame.image.load('cleave_left.png')
+slash3 = pygame.image.load('cleave_up.png')
+slash4 = pygame.image.load('cleave_down.png')
+
 WCS = pygame.image.load('world_cut.png')
+WCS2 = pygame.image.load('world_cut_left.png')
+WCS3 = pygame.image.load('world_cut_up.png')
+WCS4 = pygame.image.load('world_cut_down.png')
 
 class Cleave:
     def __init__(self):
@@ -39,10 +46,24 @@ class Cleave:
             self.pos.y-=20
         
     def draw(self,screen):
-        screen.blit(slash, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
+        if self.direction == D:
+            screen.blit(slash, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
+        if self.direction == A:
+            screen.blit(slash2, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
+        if self.direction == W:
+            screen.blit(slash3, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
+        if self.direction == S:
+            screen.blit(slash4, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
     
     def Wdraw(self, screen):
-        screen.blit(WCS, (self.pos.x, self.pos.y))
+        if self.direction == D:
+            screen.blit(WCS, (self.pos.x, self.pos.y))
+        if self.direction == A:
+            screen.blit(WCS2, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
+        if self.direction == W:
+            screen.blit(WCS3, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
+        if self.direction == S:
+            screen.blit(WCS4, (self.pos.x, self.pos.y))#screen.blit(slash, (self.pos.x, self.pos.y))
     
 
     def collide(self, x, y):
