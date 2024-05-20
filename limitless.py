@@ -10,6 +10,8 @@ DOWN = 3
 SPACE = 4
 W = 5
 
+HollowPurple = pygame.image.load('Hollow_P.png')
+
 class fireball:
     def __init__(self):
         self.pos = Vector2(-10,-10)
@@ -53,13 +55,25 @@ class fireball:
     
     def B_draw(self, screen):
         if self.hollow == True:
-            pygame.draw.circle(screen, (138,43,226), (self.pos.x, self.pos.y), 30)
-            pygame.draw.circle(screen, (147,112,219), (self.pos.x, self.pos.y), 15)
+            screen.blit(HollowPurple, (self.pos.x, self.pos.y - 100))
+            #pygame.draw.circle(screen, (138,43,226), (self.pos.x, self.pos.y), 30)
+            #pygame.draw.circle(screen, (147,112,219), (self.pos.x, self.pos.y), 15)
 
     def collide(self, x, y):
-        if math.sqrt((self.pos.x - x) **2 + (self.pos.y - y) **2) < 25:
+        if self.hollow == True:
+            if math.sqrt((self.pos.x - x) **2 + (self.pos.y - y) **2) < 50:
+                print("collision")
+                return True
+            else:
+                return False
+
+        elif math.sqrt((self.pos.x - x) **2 + (self.pos.y - y) **2) < 25:
             print("collision")
             return True
         else:
             return False
+        
+
+        
+    
         

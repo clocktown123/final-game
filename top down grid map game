@@ -247,6 +247,7 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
 
     if keys2[SPACE] == True:
         cleave.shoot(p2.pos.x, p2.pos.y, p2.direction)
+        cleave.Wslash = True
         
     if counter > 10:
         counter = 0
@@ -261,8 +262,8 @@ while p1.HP or p2.HP >= 0: #and p1.HP > 0 and p2.HP > 0: #GAME LOOP#############
     ball.move(p1.direction)
     cleave.move(p2.direction)
 
-    e1.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y, ball.hollow)
-    e2.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y, ball.hollow)
+    e1.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y, ball.hollow, cleave.Wslash)
+    e2.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y, ball.hollow, cleave.Wslash)
     p1.PlayerHp(e1.pos.x, e1.pos.y)
     p2.PlayerHp(e1.pos.x, e1.pos.y)
     p1.PlayerHp(e2.pos.x, e2.pos.y)

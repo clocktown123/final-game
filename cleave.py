@@ -25,6 +25,7 @@ class Cleave:
         self.pos = Vector2(-10,-10)
         self.isAlive = False
         self.direction = D
+        self.Wslash  = False
 
     def shoot(self, x, y, dir):
         self.pos.x = x + 20 # start fireball at center of player
@@ -67,9 +68,21 @@ class Cleave:
     
 
     def collide(self, x, y):
-        if math.sqrt((self.pos.x - x) **2 + (self.pos.y - y) **2) < 25:
-            print("collision")
-            return True
+        if self.Wslash == True:
+            if math.sqrt((self.pos.x - x) **2 + (self.pos.y - y) **2) < 50:
+                print("collision")
+                return True
+            else:
+                return False
         else:
-            return False
+            if math.sqrt((self.pos.x - x) **2 + (self.pos.y - y) **2) < 25:
+                print("collision")
+                return True
+            else:
+                return False
+        
+        
+                
+        
+        
         

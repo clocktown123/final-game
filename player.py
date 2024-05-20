@@ -64,13 +64,13 @@ class player():
         # increase timer if it's below 0, otherwise set it to 0
         if self.CD < 0:
             self.CD += delta
-            print(self.CD)
+          
         elif self.CD > 0:
             self.CD = 0
 
         if self.imageTimer < 0:
             self.imageTimer += delta
-            print(self.imageTimer)
+           
         elif self.imageTimer > 0:
             self.imageTimer = 0
 
@@ -208,14 +208,6 @@ class Sukuna(player):
             if enemy.HP <= 0:
                 enemy.isAlive = False
 
-    # def Cooldown(self):
-    #     self.CD = 5
-    #     if self.CD > 0:
-    #         self.CD -= 10
-    #         print("working")
-
-    #     print(self.CD)
-
-     
+  
             
     

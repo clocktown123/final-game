@@ -17,9 +17,9 @@ class Enemy:
         self.isAlive = True
         self.HP = 1000
     
-    def die(self, ballx, bally, cleavex, cleavey, hollow):
-        if math.sqrt((self.pos.x-ballx)**2 + (self.pos.y-bally)**2) <= 20:
-            if hollow == True:
+    def die(self, ballx, bally, cleavex, cleavey, hollow, Wslash):
+        if math.sqrt((self.pos.x-ballx)**2 + (self.pos.y-bally)**2) <= 0:
+            if hollow == True or Wslash == True:
                 self.HP -= 200
                 if self.HP < 0:
                     self.isAlive = False
@@ -27,10 +27,14 @@ class Enemy:
                 self.HP -= 100
                 if self.HP < 0:
                     self.isAlive = False
+
+                
         if math.sqrt((self.pos.x-cleavex)**2 + (self.pos.y-cleavey)**2) <= 20:
             self.HP -= 100
             if self.HP < 0:
                 self.isAlive = False
+
+        print(self.HP)
 
         
     
